@@ -29,4 +29,13 @@ class DevController extends Controller
     public function test()
     {
     }
+
+    /**
+     * @return \Illuminate\Container\Container|mixed|object
+     *
+     * Вернет конфигурационные данные dummy json
+     */
+    public function getDummyConfig(){
+        return config('services.dummy');
+    }
 }
