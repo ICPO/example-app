@@ -17,3 +17,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout/', [UserController::class, 'logout']);
     Route::resource('users', UserController::class)->scoped(['user' => 'username']);
 })->where(['user' => '[a-zA-Z0-9]+']);
+
+/**
+ * Проекты
+ */
+Route::resource('projects',\App\Http\Controllers\ProjectController::class);

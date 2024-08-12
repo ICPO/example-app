@@ -23,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('projects',function(Blueprint $table) {
-            $table->dropIndex('deadline_date');
+            $table->dropColumn('deadline_date');
+            $table->dropIndex('assignee_id');
             $table->dropColumn('assignee_id');
         });
     }
