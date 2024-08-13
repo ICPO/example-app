@@ -13,10 +13,12 @@ class ProjectController extends Controller
         1 => [
             'id' => 1,
             'title' => 'Проект 1',
+            'deadline_date' => '13.08.2024',
         ],
         2 => [
             'id' => 2,
             'title' => 'Проект 2',
+            'deadline_date' => '15.08.2024',
         ],
     ];
 

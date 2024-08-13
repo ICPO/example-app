@@ -6,6 +6,7 @@
             <template v-if="authUser && authUser.username">
                 <div class="b-headerlink">
                     <Link href="/users/">Список пользователей</Link>
+                    <Link href="/projects/">Список проектов</Link>
                 </div>
 
                 <div class="b-headerlink right">

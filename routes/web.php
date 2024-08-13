@@ -6,7 +6,7 @@ use App\Http\Controllers\UserController;
 /**
  * Мидлварь на проверку get параметра
  */
-Route::middleware([\App\Http\Middleware\CheckAccess::class])->group(function(){
+//Route::middleware([\App\Http\Middleware\CheckAccess::class])->group(function(){
 
     /**
      * Приветствие
@@ -29,6 +29,6 @@ Route::middleware([\App\Http\Middleware\CheckAccess::class])->group(function(){
      */
     Route::resource('projects',\App\Http\Controllers\ProjectController::class);
 
-});
+//});
 
 
