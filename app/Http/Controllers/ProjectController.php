@@ -7,12 +7,25 @@ use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
+    // хардкод для урока
+
+    private $dataset = [
+        1 => [
+            'id' => 1,
+            'title' => 'Проект 1',
+        ],
+        2 => [
+            'id' => 2,
+            'title' => 'Проект 2',
+        ],
+    ];
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return "Метод вывода данных (Index)";
+        return view('pages.Project.Index',['projects'=>$this->dataset]);
     }
 
     /**
@@ -20,7 +33,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return "Метод вывода формы создания данных (Create)";
+        return view('pages.Project.Create');
     }
 
     /**
@@ -36,15 +49,25 @@ class ProjectController extends Controller
      */
     public function show(int $project)
     {
-        return "Метод вывода конкретных данных (Show)";
+        $projectModel = null;
+        if (isset($this->dataset[$project])) {
+            $projectModel = $this->dataset[$project];
+        }
+
+        return view('pages.Project.Show',['projectModel'=>$projectModel]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
+
     public function edit(int $project)
     {
-        return "Метод редактирования конкретных данных (Edit)";
+        $projectModel = null;
+        if (isset($this->dataset[$project])) {
+            $projectModel = $this->dataset[$project];
+        }
+        return view('pages.Project.Edit',['projectModel'=>$projectModel]);
     }
 
     /**
