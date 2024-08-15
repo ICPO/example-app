@@ -9,18 +9,6 @@ class Project extends Model
 {
     use HasFactory;
 
-    # указать id поле по умолчанию можно вот так
-    # protected $primaryKey = '';
-
-    # указать имя таблицы на всякий случай можно вот так
-    #  protected $table = '';
-
-    # отключить автоинкремент
-    # public $incrementing = false;
-
-    # указывает соединение к базе данных
-    # protected $connection = 'other-base';
-
     # в данном св-ве надо перечислять все колонки с таблички
     protected $fillable = [
         'owner_id',
@@ -32,14 +20,6 @@ class Project extends Model
         'updated_at',
     ];
 
-    # работает аналогично fillable, но наоборот. Тут перечисляем свойства, которые не хотим заполнять
-    # protected $guarded = [];
-
-    # можно перечислить какие нибудь скрытые поля. Они не будут выводиться
-    #protected $hidden = [];
-
-    # указываем, какой тип должен быть у свойства при выводе. Например, is_active => int
-    protected $casts = [];
 
     /**
      * Получить владельца проекта
