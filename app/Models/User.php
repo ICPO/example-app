@@ -23,7 +23,7 @@ class User extends Authenticatable
         'phone',
         'password',
         'role',
-        'is_blocked'
+        'is_blocked',
     ];
 
     protected function casts(): array
@@ -47,23 +47,49 @@ class User extends Authenticatable
     {
         $query
             // Перечисление полей для фильтрации
-            ->when(isset($filters['role']), function ($query) use ($filters) {
-                $query->where('role', $filters['role']);
-            })
-            ->when(isset($filters['q']), function ($query) use ($filters) {
-                $q = $filters['q'];
+            ->when(
+                isset($filters['role']),
+                function ($query) use ($filters) {
+                    $query->where('role', $filters['role']);
+                }
+            )
+            ->when(
+                isset($filters['q']),
+                function ($query) use ($filters) {
+                    $q = $filters['q'];
 
-                if ($q !== null and $q !== '') {
-                    if (str_starts_with($q, '@')) {
-                        $query->where('username', ltrim($q, '@'));
-                    } elseif (str_contains($q, '@')) {
-                        $query->where('email', 'like', "%{$q}%");
-                    } else {
-                        $query->where('username', 'like', "%{$q}%");
+                    if ($q !== null and $q !== '') {
+                        if (str_starts_with($q, '@')) {
+                            $query->where('username', ltrim($q, '@'));
+                        } elseif (str_contains($q, '@')) {
+                            $query->where('email', 'like', "%{$q}%");
+                        } else {
+                            $query->where('username', 'like', "%{$q}%");
+                        }
                     }
                 }
-            });
+            );
 
         return $query;
+    }
+
+    /**
+     * Проекты, которыми владеет пользователь
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function ownedProjects()
+    {
+        return $this->hasMany(Project::class, 'owner_id');
+    }
+
+    /**
+     * Проекты, за которые ответственнен пользователь
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function assignedProjects()
+    {
+        return $this->hasMany(Project::class, 'assignee_id');
     }
 }

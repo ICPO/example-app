@@ -2,32 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
-    // хардкод для урока
-
-    private $dataset = [
-        1 => [
-            'id' => 1,
-            'title' => 'Проект 1',
-            'deadline_date' => '13.08.2024',
-        ],
-        2 => [
-            'id' => 2,
-            'title' => 'Проект 2',
-            'deadline_date' => '15.08.2024',
-        ],
-    ];
-
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('pages.Project.Index',['projects'=>$this->dataset]);
+        $projects = Project::all();
+        return view('pages.Project.Index',compact('projects'));
     }
 
     /**
@@ -51,12 +38,8 @@ class ProjectController extends Controller
      */
     public function show(int $project)
     {
-        $projectModel = null;
-        if (isset($this->dataset[$project])) {
-            $projectModel = $this->dataset[$project];
-        }
-
-        return view('pages.Project.Show',['projectModel'=>$projectModel]);
+        $project = Project::find($project);
+        return view('pages.Project.Show',compact('project'));
     }
 
     /**
@@ -65,11 +48,8 @@ class ProjectController extends Controller
 
     public function edit(int $project)
     {
-        $projectModel = null;
-        if (isset($this->dataset[$project])) {
-            $projectModel = $this->dataset[$project];
-        }
-        return view('pages.Project.Edit',['projectModel'=>$projectModel]);
+        $project = Project::find($project);
+        return view('pages.Project.Edit',compact('project'));
     }
 
     /**

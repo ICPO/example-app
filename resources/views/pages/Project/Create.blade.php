@@ -15,11 +15,12 @@
     <x-project-form action="{{ route('projects.store') }}" method="POST" class="col-md-4">
         <div class="mb-3">
             <label for="title" class="form-label">{{__("Заголовок проекта")}}</label>
-            <input type="text" class="form-control" placeholder="{!! __("Например, Проект 1") !!}">
+            <input type="text" class="form-control" placeholder="{!! __("Например, Проект 1") !!}}">
         </div>
+
+
         <button type="submit" class="btn btn-primary">{{__("Обновить")}}</button>
     </x-project-form>
-
 </div>
 
 @endsection

@@ -12,15 +12,20 @@
 
 
         <div class="mt-5">
+            @if($projects->count() > 0)
             @foreach($projects as $project)
                 <x-project-card class="card mt-2">
                     <div class="card-body">
-                        <h5 class="card-title">{!! $project['title'] !!}</h5>
-                        <p class="card-text">{{__("Дата завершения")}}: {{$project['deadline_date']}}</p>
-                        <a href="{{ route('projects.show',$project['id']) }}" class="btn btn-primary">{{__("Подробнее")}}</a>
+                        <h5 class="card-title">{!! $project->title !!}</h5>
+                        <p class="card-text">{{__("Дата завершения")}}: {{$project->deadline_date}}</p>
+                        <a href="{{ route('projects.show',$project->id) }}" class="btn btn-primary">{{__("Подробнее")}}</a>
                     </div>
                 </x-project-card>
             @endforeach
+            @else
+                <p>Проектов еще не создано</p>
+
+            @endif
         </div>
     </div>
 @endsection
