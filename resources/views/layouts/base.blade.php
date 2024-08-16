@@ -11,6 +11,11 @@
 <body>
 @include('layouts.header')
 <div class="container">
+    @if (session()->has('alertMessage') && session()->has('alertType'))
+        <x-alert type="{{session()->get('alertType')}}" title="{{__('Уведомление')}}">
+            {{session()->get('alertMessage')}}
+        </x-alert>
+    @endif
     @yield('content')
 </div>
 @include('layouts.footer')

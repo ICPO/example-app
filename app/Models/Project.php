@@ -20,7 +20,6 @@ class Project extends Model
         'updated_at',
     ];
 
-
     /**
      * Получить владельца проекта
      *
@@ -28,7 +27,7 @@ class Project extends Model
      */
     public function owner()
     {
-        return $this->belongsTo(User::class,'owner_id','id');
+        return $this->belongsTo(User::class, 'owner_id', 'id');
     }
 
     /**
@@ -38,7 +37,7 @@ class Project extends Model
      */
     public function assignee()
     {
-        return $this->belongsTo(User::class,'assignee_id','id');
+        return $this->belongsTo(User::class, 'assignee_id', 'id');
     }
 
 }

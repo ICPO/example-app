@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Project\ProjectStoreRequest;
+use App\Http\Requests\Project\ProjectUpdateRequest;
 use App\Models\Project;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
+use App\Models\User;
+
 
 class ProjectController extends Controller
 {
@@ -14,7 +16,8 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = Project::all();
-        return view('pages.Project.Index',compact('projects'));
+
+        return view('pages.Project.Index', compact('projects'));
     }
 
     /**
@@ -22,15 +25,26 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return view('pages.Project.Create');
+        $users = User::query()->select('id', 'username')->get();
+
+        return view('pages.Project.Create', compact('users'));
     }
 
     /**
      * Store a newly created resource in storage.
+     *
+     * @param ProjectStoreRequest $request
+     *
      */
-    public function store(Request $request)
+    public function store(ProjectStoreRequest $request)
     {
-        return "Метод сохранения данных после create (Store)";
+        $validated = $request->validated();
+
+        Project::create($validated);
+
+        return redirect()->route('projects.index')->with(
+            ['alertMessage' => 'Проект создан', 'alertType' => 'success']
+        );
     }
 
     /**
@@ -38,8 +52,9 @@ class ProjectController extends Controller
      */
     public function show(int $project)
     {
-        $project = Project::find($project);
-        return view('pages.Project.Show',compact('project'));
+        $project = Project::findOrFail($project);
+
+        return view('pages.Project.Show', compact('project'));
     }
 
     /**
@@ -48,23 +63,39 @@ class ProjectController extends Controller
 
     public function edit(int $project)
     {
-        $project = Project::find($project);
-        return view('pages.Project.Edit',compact('project'));
+        $project = Project::findOrFail($project);
+        $users = User::query()->select('id','username')->get();
+
+        return view('pages.Project.Edit', compact('project','users'));
     }
 
     /**
      * Update the specified resource in storage.
+     *
+     * @param ProjectUpdateRequest $request
+     *
      */
-    public function update(Request $request, int $project)
+    public function update(ProjectUpdateRequest $request)
     {
-        return "Метод обновление данных после Edit (Update)";
+        $validated = $request->validated();
+        $project = Project::findOrFail($request->project);
+        $project->fill($validated)->save();
+
+        return redirect()->route('projects.show',$request->project)->with(
+            ['alertMessage' => 'Проект обновлен', 'alertType' => 'success']
+        );
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $projectId)
+    public function destroy(int $project)
     {
-        return "Метод удаления данных (Destroy)";
+        $project = Project::findOrFail($project);
+        $project->delete();
+
+        return redirect()->route('projects.index')->with(
+            ['alertMessage' => 'Проект удален', 'alertType' => 'success']
+        );
     }
 }

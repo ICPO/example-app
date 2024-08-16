@@ -11,8 +11,8 @@
                 </li>
             </ul>
             <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">{{__('Поиск проектов')}}</button>
+                <input class="form-control me-2" type="search" placeholder="{{__('Поиск проектов')}}" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">{{__('Поиск')}}</button>
             </form>
         </div>
     </div>
