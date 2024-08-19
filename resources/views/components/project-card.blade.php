@@ -1,3 +1,3 @@
 <div {{$attributes}}>
-{{$slot}}
+    {{$slot}}
 </div>

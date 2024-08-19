@@ -7,7 +7,6 @@ use App\Http\Requests\Project\ProjectUpdateRequest;
 use App\Models\Project;
 use App\Models\User;
 
-
 class ProjectController extends Controller
 {
     /**
@@ -17,7 +16,7 @@ class ProjectController extends Controller
     {
         $projects = Project::all();
 
-        return view('pages.Project.Index', compact('projects'));
+        return view('pages.Project.Index', ['projects' => $projects]);
     }
 
     /**
@@ -27,7 +26,7 @@ class ProjectController extends Controller
     {
         $users = User::query()->select('id', 'username')->get();
 
-        return view('pages.Project.Create', compact('users'));
+        return view('pages.Project.Create', ['users' => $users]);
     }
 
     /**
@@ -36,11 +35,9 @@ class ProjectController extends Controller
      * @param ProjectStoreRequest $request
      *
      */
-    public function store(ProjectStoreRequest $request)
+    public function store(ProjectStoreRequest $request, Project $project)
     {
-        $validated = $request->validated();
-
-        Project::create($validated);
+        Project::create($request->validated());
 
         return redirect()->route('projects.index')->with(
             ['alertMessage' => 'Проект создан', 'alertType' => 'success']
@@ -50,23 +47,20 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(int $project)
+    public function show(Project $project)
     {
-        $project = Project::findOrFail($project);
-
-        return view('pages.Project.Show', compact('project'));
+        return view('pages.Project.Show', ['project' => $project]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
 
-    public function edit(int $project)
+    public function edit(Project $project)
     {
-        $project = Project::findOrFail($project);
-        $users = User::query()->select('id','username')->get();
+        $users = User::pluck('username','id');
 
-        return view('pages.Project.Edit', compact('project','users'));
+        return view('pages.Project.Edit', ['project' => $project, 'users' => $users]);
     }
 
     /**
@@ -75,13 +69,11 @@ class ProjectController extends Controller
      * @param ProjectUpdateRequest $request
      *
      */
-    public function update(ProjectUpdateRequest $request)
+    public function update(ProjectUpdateRequest $request, Project $project)
     {
-        $validated = $request->validated();
-        $project = Project::findOrFail($request->project);
-        $project->fill($validated)->save();
+        $project->update($request->validated());
 
-        return redirect()->route('projects.show',$request->project)->with(
+        return redirect()->route('projects.show', $project->id)->with(
             ['alertMessage' => 'Проект обновлен', 'alertType' => 'success']
         );
     }
@@ -89,9 +81,8 @@ class ProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $project)
+    public function destroy(Project $project)
     {
-        $project = Project::findOrFail($project);
         $project->delete();
 
         return redirect()->route('projects.index')->with(

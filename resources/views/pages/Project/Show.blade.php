@@ -14,41 +14,34 @@
                 </ol>
             </nav>
 
-            @if(!$project)
-                <div>
-                    <h2>{{__('Такого проекта не существует')}}</h2>
+            <x-project-card class="card mt-2">
+                <div class="card-body">
+                    <table class="table-primary">
+                        <tr class="d-flex">
+                            <th class="col-12">{{__('Название проекта')}}</th>
+                            <td class="col-12">{!! $project->title !!}</td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th class="col-12">{{__('Дата сдачи проекта')}}</th>
+                            <td class="col-12">{{$project->deadline_date}}</td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th class="col-12">{{__('Владелец проекта')}}</th>
+                            <td class="col-12">{{$project->owner->username}}</td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th class="col-12">{{__('Ответственный за проект')}}</th>
+                            <td class="col-12">{{$project->assignee->username}}</td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th class="col-12">{{__('Проект активен')}}</th>
+                            <td class="col-12">{{$project->is_active == 1 ? 'Да' : 'Нет'}}</td>
+                        </tr>
+                    </table>
+                    <a href="{{route('projects.edit',$project->id)}}"
+                       class="btn btn-primary mt-3">{{__('Редактировать')}}</a>
                 </div>
-            @else
-
-                <x-project-card class="card mt-2">
-                    <div class="card-body">
-                        <table class="table-primary">
-                            <tr class="d-flex">
-                                <th class="col-12">{{__('Название проекта')}}</th>
-                                <td class="col-12">{!! $project->title !!}</td>
-                            </tr>
-                            <tr class="d-flex">
-                                <th class="col-12">{{__('Дата сдачи проекта')}}</th>
-                                <td class="col-12">{{$project->deadline_date}}</td>
-                            </tr>
-                            <tr class="d-flex">
-                                <th class="col-12">{{__('Владелец проекта')}}</th>
-                                <td class="col-12">{{$project->owner->username}}</td>
-                            </tr>
-                            <tr class="d-flex">
-                                <th class="col-12">{{__('Ответственный за проект')}}</th>
-                                <td class="col-12">{{$project->assignee->username}}</td>
-                            </tr>
-                            <tr class="d-flex">
-                                <th class="col-12">{{__('Проект активен')}}</th>
-                                <td class="col-12">{{$project->is_active == 1 ? 'Да' : 'Нет'}}</td>
-                            </tr>
-                        </table>
-                        <a href="{{route('projects.edit',$project->id)}}"
-                           class="btn btn-primary mt-3">{{__('Редактировать')}}</a>
-                    </div>
-                </x-project-card>
-            @endif
+            </x-project-card>
 
         </div>
     </div>

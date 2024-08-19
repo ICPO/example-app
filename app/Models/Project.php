@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use \Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,7 +10,7 @@ class Project extends Model
 {
     use HasFactory;
 
-    # в данном св-ве надо перечислять все колонки с таблички
+    // Колонки
     protected $fillable = [
         'owner_id',
         'title',
@@ -22,20 +23,16 @@ class Project extends Model
 
     /**
      * Получить владельца проекта
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function owner()
+    public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id', 'id');
     }
 
     /**
      * Получить ответственного за проект
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function assignee()
+    public function assignee(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assignee_id', 'id');
     }

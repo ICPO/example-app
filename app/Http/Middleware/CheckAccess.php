@@ -15,10 +15,11 @@ class CheckAccess
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ( ! empty($request->get('access')) && $request->get('access') == 'yes') {
-            return $next($request);
-        } else {
+
+        if ($request->access !== 'yes') {
             abort(403, 'Access denied');
         }
+
+        return $next($request);
     }
 }

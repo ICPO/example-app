@@ -6,13 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ProjectStoreRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -30,7 +23,18 @@ class ProjectStoreRequest extends FormRequest
         ];
     }
 
-    protected function prepareForValidation(){
-        $this->merge(['is_active'=>$this->is_active ? true: false])->all();
+    public function messages()
+    {
+        return [
+            'title' => 'Поле «Заголовок проекта» обязательно к заполнению',
+            'owner_id' => 'Поле «Владелец проекта» обязательно к заполнению',
+            'assignee_id' => 'Поле «Ответственный за проект» обязательно к заполнению',
+            'deadline_date' => 'Поле «Дата сдачи проекта» обязательно к заполнению',
+        ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge(['is_active' => $this->is_active ? true : false])->all();
     }
 }

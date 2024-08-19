@@ -9,19 +9,12 @@ use Illuminate\View\Component;
 class Alert extends Component
 {
     /**
-     * @var
-     * Параметры компонента
-     */
-    public $type, $title;
-
-    /**
      * Create a new component instance.
+     *
+     * @var $type - Тип (success и т.п)
+     * @var $title - Заголовок окна
      */
-    public function __construct($type, $title)
-    {
-        $this->type = $type;
-        $this->title = $title;
-    }
+    public function __construct(public string $type, public string $title){}
 
     /**
      * Get the view / contents that represent the component.

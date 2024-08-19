@@ -4,7 +4,9 @@
     <div class="mt-5">
         <div class="d-flex align-items-center">
             <h1>{{__('Список проектов')}}</h1>
-            <a class="ms-3" href="{{route('projects.create')}}"><button class="btn btn-primary">{{__('Создание проекта')}}</button></a>
+            <a class="ms-3" href="{{route('projects.create')}}">
+                <button class="btn btn-primary">{{__('Создание проекта')}}</button>
+            </a>
         </div>
 
 

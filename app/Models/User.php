@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use \Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -75,20 +76,16 @@ class User extends Authenticatable
 
     /**
      * Проекты, которыми владеет пользователь
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function ownedProjects()
+    public function ownedProjects(): HasMany
     {
         return $this->hasMany(Project::class, 'owner_id');
     }
 
     /**
      * Проекты, за которые ответственнен пользователь
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function assignedProjects()
+    public function assignedProjects(): HasMany
     {
         return $this->hasMany(Project::class, 'assignee_id');
     }

@@ -30,7 +30,8 @@ class ProjectUpdateRequest extends FormRequest
         ];
     }
 
-    protected function prepareForValidation(){
-       $this->merge(['is_active'=>$this->is_active ? true: false]);
+    protected function prepareForValidation()
+    {
+        $this->merge(['is_active' => $this->is_active ? true : false]);
     }
 }
