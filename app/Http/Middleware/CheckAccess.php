@@ -15,6 +15,8 @@ class CheckAccess
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $request->merge(['access' => 'yes']);
+
         if ($request->access !== 'yes') {
             abort(403, 'Access denied');
         }

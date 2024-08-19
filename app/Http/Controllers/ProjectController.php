@@ -58,7 +58,7 @@ class ProjectController extends Controller
 
     public function edit(Project $project)
     {
-        $users = User::pluck('username','id');
+        $users = User::pluck('username', 'id');
 
         return view('pages.Project.Edit', ['project' => $project, 'users' => $users]);
     }
