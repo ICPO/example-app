@@ -15,7 +15,6 @@ class CheckAccess
      */
     public function handle(Request $request, Closure $next): Response
     {
-
         if ($request->access !== 'yes') {
             abort(403, 'Access denied');
         }

@@ -37,7 +37,7 @@ class ProjectController extends Controller
      */
     public function store(ProjectStoreRequest $request, Project $project)
     {
-        Project::create($request->validated());
+        $project::create($request->validated());
 
         return redirect()->route('projects.index')->with(
             ['alertMessage' => 'Проект создан', 'alertType' => 'success']
