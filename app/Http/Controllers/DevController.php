@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\User;
 use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 
 class DevController extends Controller
@@ -98,4 +100,39 @@ class DevController extends Controller
 
         return response()->json($message);
     }
+
+    /**
+     * Возвращает 3 последних проекта по условиям:
+     * 1) Если юзер авторизован, то его 3 проекта
+     * 2) Если юзер не авторизован, то кому-угодно
+     */
+    public function getMyLatestThree()
+    {
+        $query = Project::query();
+        if (Auth::check()) {
+            $query = $query->where('owner_id', '=', Auth::id());
+        }
+        $query = $query->orderBy('id', 'desc')->limit(3)->get();
+
+        return $query;
+    }
+
+    /**
+     * Возвращает список пользователей и кол-во проектов которыми они владеют
+     */
+    public function usersProjects()
+    {
+        return User::query()->select('username')->withCount('ownedProjects as projects_count')->get();
+    }
+
+    /**
+     * Возвращает кол-во проектов с истекшим дедлайном
+     */
+    public function getExpiredProjectsCount()
+    {
+        $expiredProjectCount = Project::expired()->count();
+
+        return response()->json("Проектов с истекшим дедлайном: " . $expiredProjectCount);
+    }
+
 }
