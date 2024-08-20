@@ -6,14 +6,21 @@ use App\Http\Requests\Project\ProjectStoreRequest;
 use App\Http\Requests\Project\ProjectUpdateRequest;
 use App\Models\Project;
 use App\Models\User;
+use App\Policies\ProjectPolicy;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class ProjectController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        Gate::authorize('viewAll', Project::class);
+
         $projects = Project::all();
 
         return view('pages.Project.Index', ['projects' => $projects]);
@@ -24,6 +31,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
+        Gate::authorize('create', Project::class);
         $users = User::query()->select('id', 'username')->get();
 
         return view('pages.Project.Create', ['users' => $users]);
@@ -37,6 +45,7 @@ class ProjectController extends Controller
      */
     public function store(ProjectStoreRequest $request, Project $project)
     {
+        Gate::authorize('create', $project);
         $project::create($request->validated());
 
         return redirect()->route('projects.index')->with(
@@ -49,6 +58,8 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        Gate::authorize('show', $project);
+
         return view('pages.Project.Show', ['project' => $project]);
     }
 
@@ -58,6 +69,7 @@ class ProjectController extends Controller
 
     public function edit(Project $project)
     {
+        Gate::authorize('update', $project);
         $users = User::pluck('username', 'id');
 
         return view('pages.Project.Edit', ['project' => $project, 'users' => $users]);
@@ -71,6 +83,8 @@ class ProjectController extends Controller
      */
     public function update(ProjectUpdateRequest $request, Project $project)
     {
+        Gate::authorize('update', $project);
+
         $project->update($request->validated());
 
         return redirect()->route('projects.show', $project->id)->with(
@@ -83,6 +97,7 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        Gate::authorize('delete', $project);
         $project->delete();
 
         return redirect()->route('projects.index')->with(
