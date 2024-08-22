@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
+use \Illuminate\Database\Eloquent\Builder;
 
 class DevController extends Controller
 {
@@ -74,14 +75,13 @@ class DevController extends Controller
      * Выводит список проектов админов с информацией об админе
      * @return array
      *
-     * @var $deadline - дата включительно, по которую все проекты считаются просроченными
      */
     public function getExpired()
     {
-        $deadline = Carbon::now()->toDateString();
-
-        return Project::query()->whereDate('deadline_date', '<=', $deadline)->orderBy('deadline_date', 'asc')->get(
-        )->toArray();
+        return Project::whereDate('deadline_date', '<=', now()->toDateString())->orderBy(
+            'deadline_date',
+            'asc'
+        )->get()->toArray();
     }
 
     /**
@@ -91,7 +91,7 @@ class DevController extends Controller
     public function updateRandom()
     {
         try {
-            $project = Project::query()->inRandomOrder()->firstOrFail();
+            $project = Project::inRandomOrder()->firstOrFail();
             $project->update(Project::factory()->make()->toArray());
             $message = "Запись ID: {$project->id} обновлена";
         } catch (\Exception $e) {
@@ -108,13 +108,10 @@ class DevController extends Controller
      */
     public function getMyLatestThree()
     {
-        $query = Project::query();
-        if (Auth::check()) {
-            $query = $query->where('owner_id', '=', Auth::id());
-        }
-        $query = $query->orderBy('id', 'desc')->limit(3)->get();
+        return Project::when(Auth::check(), function(Builder $builder) {
+            $builder->where('owner_id', '=', Auth::id());
+        })->latest()->limit(3)->get();
 
-        return $query;
     }
 
     /**

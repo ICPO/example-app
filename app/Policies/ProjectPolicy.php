@@ -21,10 +21,12 @@ class ProjectPolicy
 
     /**
      * Просмотр одного проекта
+     *
+     * UPD - проверка только своих проектов
      */
-    public function show(User $user): bool
+    public function view(User $user, Project $project): bool
     {
-        return true;
+        return $user->role === 'admin' || $project->owner->id === $user->id;
     }
 
     /**
@@ -35,13 +37,12 @@ class ProjectPolicy
         return true;
     }
 
-
     /**
      * Обновление данных по проекту
      */
     public function update(User $user, Project $project): bool
     {
-        return $user->role === 'admin' or $project->owner->id === $user->id;
+        return $user->role === 'admin' || $project->owner->id === $user->id;
     }
 
     /**
@@ -49,7 +50,7 @@ class ProjectPolicy
      */
     public function delete(User $user, Project $project): bool
     {
-       return $user->role === 'admin' or $project->owner->id === $user->id;
+        return $user->role === 'admin' || $project->owner->id === $user->id;
     }
 
 }

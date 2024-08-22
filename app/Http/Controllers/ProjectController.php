@@ -43,10 +43,10 @@ class ProjectController extends Controller
      * @param ProjectStoreRequest $request
      *
      */
-    public function store(ProjectStoreRequest $request, Project $project)
+    public function store(ProjectStoreRequest $request)
     {
-        Gate::authorize('create', $project);
-        $project::create($request->validated());
+        Gate::authorize('create', Project::class);
+        Project::create($request->validated());
 
         return redirect()->route('projects.index')->with(
             ['alertMessage' => 'Проект создан', 'alertType' => 'success']
@@ -58,7 +58,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        Gate::authorize('show', $project);
+        Gate::authorize('view', $project);
 
         return view('pages.Project.Show', ['project' => $project]);
     }

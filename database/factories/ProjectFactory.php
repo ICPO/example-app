@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Date;
  */
 class ProjectFactory extends Factory
 {
+
+    private $usersCache = null;
+
     /**
      * Define the model's default state.
      *
@@ -18,13 +21,15 @@ class ProjectFactory extends Factory
      */
     public function definition(): array
     {
-        $users = User::pluck('id');
+        if (is_null($this->usersCache)) {
+            $this->usersCache = User::pluck('id');
+        }
 
         return [
-            'owner_id' => fake()->randomElement($users),
+            'owner_id' => fake()->randomElement($this->usersCache),
             'title' => fake()->word(),
             'is_active' => fake()->randomElement([true, false]),
-            'assignee_id' => fake()->randomElement($users),
+            'assignee_id' => fake()->randomElement($this->usersCache),
             'deadline_date' => fake()->dateTimeBetween(Date::now()->subMonth(), 'now'),
         ];
     }
