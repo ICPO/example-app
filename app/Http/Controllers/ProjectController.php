@@ -2,28 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Project\ProjectStoreRequest;
 use App\Http\Requests\Project\ProjectUpdateRequest;
 use App\Models\Project;
 use App\Models\User;
-use App\Policies\ProjectPolicy;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
-
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource. (10)
      */
     public function index()
     {
-        Gate::authorize('viewAll', Project::class);
-
-        $projects = Project::all();
-
-        return view('pages.Project.Index', ['projects' => $projects]);
+        return Inertia::render('Project/Index', [
+            'projects' => Project::all(), // (1)
+            'users' => User::pluck('username', 'id'),
+        ]);
     }
 
     /**
@@ -31,65 +26,52 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        Gate::authorize('create', Project::class);
-        $users = User::query()->select('id', 'username')->get();
-
-        return view('pages.Project.Create', ['users' => $users]);
+        return Inertia::render('Project/Create', [
+            'users' => User::pluck('username', 'id'),
+            'default_assigned_to' => (int) env('PROJECT_DEFAULT_ASSIGNEE'), // (2)
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param ProjectStoreRequest $request
-     *
      */
-    public function store(ProjectStoreRequest $request)
+    public function store(Request $request)
     {
-        Gate::authorize('create', Project::class);
-        Project::create($request->validated());
+        $request->validate([ // (3)
+            'name' => 'required',
+            'description' => 'required',
+            'assigned_to' => 'required',
+        ]);
 
-        return redirect()->route('projects.index')->with(
-            ['alertMessage' => 'Проект создан', 'alertType' => 'success']
-        );
-    }
+        Project::create($request->all());
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Project $project)
-    {
-        Gate::authorize('view', $project);
-
-        return view('pages.Project.Show', ['project' => $project]);
+        return redirect()->route('projects.index');
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-
-    public function edit(Project $project)
+    public function edit(string $id) // (5)
     {
-        Gate::authorize('update', $project);
-        $users = User::pluck('username', 'id');
-
-        return view('pages.Project.Edit', ['project' => $project, 'users' => $users]);
+        $instance = Project::findOrFail($id); // (6)
+        return Inertia::render('Project/Edit', [
+            'initialValues' => $instance->toArray(), // (7)
+            'users' => User::pluck('username', 'id'),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param ProjectUpdateRequest $request
-     *
      */
     public function update(ProjectUpdateRequest $request, Project $project)
     {
-        Gate::authorize('update', $project);
+        // (9)
+        $project->name = $request->name;
+        $project->description = $request->description;
+        $project->assigned_to = $request->assigned_to();
+        $project->save();
 
-        $project->update($request->validated());
-
-        return redirect()->route('projects.show', $project->id)->with(
-            ['alertMessage' => 'Проект обновлен', 'alertType' => 'success']
-        );
+        return redirect()->route('projects.index');
     }
 
     /**
@@ -97,11 +79,8 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        Gate::authorize('delete', $project);
         $project->delete();
 
-        return redirect()->route('projects.index')->with(
-            ['alertMessage' => 'Проект удален', 'alertType' => 'success']
-        );
+        return redirect()->route('projects.index');
     }
 }
